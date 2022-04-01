@@ -24,11 +24,12 @@ async function run() {
           const id =req.params.id;
           const query = {_id: ObjectId(id)};
           const singleProduct =await productCollection.findOne(query);
+          console.log(singleProduct);
           res.json(singleProduct);
       })
         
         app.post('/products',async(req,res)=>{
-            const newProduct = req.body;
+            const newProduct= req.body;
             const result = await productCollection.insertOne(newProduct);
             console.log(`A document was inserted with the _id: ${result.insertedId}`);
             res.json(result);
@@ -42,15 +43,17 @@ async function run() {
         })
         app.put('/products/:id',async(req,res)=>{
             const id = req.params.id;
-            const updatedProduct = req.body;
+            const updatedProduct = req.body.user.newProduct;
+            console.log(updatedProduct);
             const query = {_id: ObjectId(id)};
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
-                 name:updatedProduct.name,
-                 price:updatedProduct.price,
-                 brand:updatedProduct.brand
-                },
+                    name : updatedProduct.name,
+                    price:updatedProduct.price,
+                    brand:updatedProduct.brand
+                   },
+               
               };
               const result = await productCollection.updateOne(query, updateDoc, options);
               res.json(result);
